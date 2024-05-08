@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Countdown</title>
+    <style>
+        @font-face {
+            font-family: Segment;
+            src: url(DSEG7Classic-Bold.ttf);
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: red;
+            font-family: Segment;
+            font-size: 140px;
+        }
+        .display {
+            margin-bottom: 20px;            
+        }
+        #displaycase{
+            padding-left: 30px;   
+            padding-right: 30px;   
+        }
+        .inverted{
+            background-color: red;            
+            color:black;
+        }
+        .black{
+            color: black;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: black;
+            color: darkgreen
+        }
+    </style>
+</head>
+
+<body>
+    <div id="displaycase">
+        <span id="minutes" class="display">00</span>
+        <span id="colon" class="display">:</span>
+        <span id="seconds"class="display">00</span>
+    </div>
+    <button onclick="startTimer()">▶</button>
+    <button onclick="stopTimer()">⬛</button>
+    <button onclick="resetTimer()">♻</button>
+    <script>
+        const START_TIME = 60* 60;
+        let countdown;
+        let countdownTime = START_TIME;//0 * 60; // Countdown from 5 minutes (300 seconds)
+        const minutes = document.getElementById('minutes');
+        const seconds = document.getElementById('seconds');
+        const colon = document.getElementById('colon'); 
+        const display = document.getElementById('displaycase');
+
+        function formatMinutes(seconds) {
+            var m = Math.floor(seconds / 60).toString();
+            if (m.length < 2) m = `0${m}`;
+            return m;
+        }
+
+        function formatSeconds(seconds) {
+            var remainingSeconds = (seconds % 60).toString();
+            if (remainingSeconds.length < 2) remainingSeconds = `0${remainingSeconds}`;
+            return remainingSeconds.toString();
+        }
+
+
+        function updateDisplay() {
+            minutes.textContent = formatMinutes(countdownTime);
+            seconds.textContent = formatSeconds(countdownTime);
+        }
+
+        function timer() {
+            countdownTime--;
+            updateDisplay();
+            if (countdownTime <= 0.0) {
+                minutes.textContent = "00";
+                seconds.textContent = "00";                
+                display.classList.toggle("inverted")
+            }
+            colon.classList.toggle("black");            
+        }
+
+        function startTimer() {
+            clearInterval(countdown);
+            countdown = setInterval(timer, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(countdown);
+            display.classList.remove("inverted")
+        }
+
+        function resetTimer() {
+            stopTimer();
+            countdownTime = START_TIME; // Reset to 5 minutes
+            display.classList.remove("inverted")
+            updateDisplay();
+        }
+        updateDisplay(); // Initialize display
+    </script>
+</body>
+
+</html>
