@@ -13,6 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            
             height: 100vh;
             background-color: black;
             color: red;
@@ -24,7 +25,7 @@
         }
         #displaycase{
             padding-left: 30px;   
-            padding-right: 30px;   
+            padding-right: 30px;             
         }
         .inverted{
             background-color: red;            
@@ -45,26 +46,42 @@
 
 <body>
     <div id="displaycase">
+        <span id="hours" class="display">00</span>
+        <span id="colon2" class="display">:</span>        
         <span id="minutes" class="display">00</span>
         <span id="colon" class="display">:</span>
         <span id="seconds"class="display">00</span>
-    </div>
-    <button onclick="startTimer()">▶</button>
-    <button onclick="stopTimer()">⬛</button>
-    <button onclick="resetTimer()">♻</button>
+    </div>      
+        <button onclick="startTimer()">▶</button>
+        <button onclick="stopTimer()">⬛</button>
+        <button onclick="resetTimer()">♻</button>
+        <button onclick="setMinutes()">⬇</button>
     <script>
-        const START_TIME = 60* 60;
+        const START_TIME = (60* 60)-1;
         let countdown;
         let countdownTime = START_TIME;//0 * 60; // Countdown from 5 minutes (300 seconds)
         const minutes = document.getElementById('minutes');
         const seconds = document.getElementById('seconds');
+        const hours = document.getElementById('hours');
         const colon = document.getElementById('colon'); 
+        const colon2 = document.getElementById('colon2'); 
+        
+        
         const display = document.getElementById('displaycase');
 
-        function formatMinutes(seconds) {
+
+        function formatHours(seconds) {
+            var m = Math.floor(seconds / 60)
+            var h = Math.floor(m / 60).toString();
+            if (h.length < 2) h = `0${h}`;
+            return h;
+        }
+
+        function formatMinutes(seconds) {            
             var m = Math.floor(seconds / 60).toString();
-            if (m.length < 2) m = `0${m}`;
-            return m;
+            var remainingMinutes = (m % 60).toString();
+            if (remainingMinutes.length < 2) remainingMinutes = `0${remainingMinutes}`;
+            return remainingMinutes;
         }
 
         function formatSeconds(seconds) {
@@ -74,9 +91,24 @@
         }
 
 
-        function updateDisplay() {
+        function updateDisplay() {            
+            hours.textContent = formatHours(countdownTime)
+            
+            hours.hidden = hours.textContent == "00"
+            colon2.hidden = hours.textContent == "00"
             minutes.textContent = formatMinutes(countdownTime);
             seconds.textContent = formatSeconds(countdownTime);
+        }
+
+        function setMinutes() {
+            resetTimer()
+            let promptAnswer
+            do{
+                promptAnswer = parseInt(prompt("Please enter a number minutes to set the timer", "59"));
+            }
+            while(isNaN(promptAnswer))
+            countdownTime = parseInt(promptAnswer) * 60
+            updateDisplay();
         }
 
         function timer() {
