@@ -132,6 +132,8 @@
             if (countdownTime <= 0.0) {
                 minutes.textContent = "00";
                 seconds.textContent = "00";
+                hours.textContent = "00";
+                hours.hidden = hours.textContent == "00"
                 display.classList.toggle("inverted")
             }
             colon.classList.toggle("black");
